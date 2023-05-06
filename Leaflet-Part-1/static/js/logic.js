@@ -1,56 +1,46 @@
-// Store our API endpoint as queryUrl and tectonicplatesUrl
-var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-var tectonicplatesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json"
+// Stored our API endpoint as query and tectonics
+var query = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+var tectonics = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json"
 
-// Perform a GET request to the query URL
-d3.json(queryUrl).then(function (data) {
-    // Console log the data retrieved 
+// Performed a GET request to the query URL
+d3.json(query).then(function (data) {
+    // Console logged the data retrieved 
     console.log(data);
-    // Once we get a response, send the data.features object to the createFeatures function.
+    // Once we got a response, we sent the data.features object to the createFeatures function.
     createFeatures(data.features);
 });
 
-// Function to determine marker color by depth
-/*function chooseColor(depth){
-  if (depth < 10) return "#00FF00";
-  else if (depth < 30) return "greenyellow";
-  else if (depth < 50) return "yellow";
-  else if (depth < 70) return "orange";
-  else if (depth < 90) return "orangered";
-  else return "#FF0000";
-}
-// This was slightly easier to write coding wise.
-*/
+// Created a function to determine marker color by depth
+
 function chooseColor(depth){
-    // Create colors object to compare depth values to
-    const colors = {
+    // Createed colors object in order to compare depth values
+    const colorObj = {
         '#00FF00': depth <= 10,
         'greenyellow': depth > 10 && depth <= 30,
         'yellow': depth > 30 && depth <= 50,
         'orange': depth > 50 && depth <= 70,
         'orangered': depth > 70 && depth <= 90
     }
-    // An object search performs slightly better to draw times of the if statement function.
-    return Object.keys(colors).find(key => colors[key] == true) ?? "#FF0000" // ?? acts as an else statement to create a default string for our last color.
+    // Performed an object search because it is slightly better to obtain times of the if statement function.
+    return Object.keys(colorObj).find(key => colorObj[key] == true) ?? "#FF0000"
 }
 
 function createFeatures(earthquakeData) {
 
-  // Define a function that we want to run once for each feature in the features array.
-  // Give each feature a popup that describes the place and time of the earthquake.
+  // Defined a function that we want to run once for the features array
+  // Gave each feature a popup that described the place and time of the earthquake
   function onEachFeature(feature, layer) {
     layer.bindPopup(`<h3>Location: ${feature.properties.place}</h3><hr><p>Date: ${new Date(feature.properties.time)}</p><p>Magnitude: ${feature.properties.mag}</p><p>Depth: ${feature.geometry.coordinates[2]}</p>`);
   }
 
-  // Create a GeoJSON layer that contains the features array on the earthquakeData object.
-  // Run the onEachFeature function once for each piece of data in the array.
-  var earthquakes = L.geoJSON(earthquakeData, {
+  // Created a GeoJSON layer that contains the features array on the earthquakeData object
+    var earthquakes = L.geoJSON(earthquakeData, {
     onEachFeature: onEachFeature,
 
-    // Point to layer used to alter markers
+    // Pointed to the layer used to alter markers
     pointToLayer: function(feature, latlng) {
 
-      // Determine the style of markers based on properties
+      // Determined the style of markers based on properties
       var markers = {
         radius: feature.properties.mag * 20000,
         fillColor: chooseColor(feature.geometry.coordinates[2]),
@@ -62,7 +52,7 @@ function createFeatures(earthquakeData) {
     }
   });
 
-  // Send our earthquakes layer to the createMap function/
+  // Sent our earthquakes layer to the createMap function/
   createMap(earthquakes);
 }
 
@@ -89,8 +79,8 @@ function createMap(earthquakes) {
   // Create layer for tectonic plates
   tectonicPlates = new L.layerGroup();
 
-    // Perform a GET request to the tectonicplatesURL
-    d3.json(tectonicplatesUrl).then(function (plates) {
+    // Perform a GET request to the tectonics URL
+    d3.json(tectonics).then(function (plates) {
 
         // Console log the data retrieved 
         console.log(plates);
