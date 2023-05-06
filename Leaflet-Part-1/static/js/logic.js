@@ -76,13 +76,13 @@ function createMap(earthquakes) {
 
   var watercolor = new L.StamenTileLayer("watercolor");
 
-  // Create layer for tectonic plates
+  // Created a new layer for tectonic plates
   tectonicPlates = new L.layerGroup();
 
-    // Perform a GET request to the tectonics URL
+    // Performed a GET request to the tectonics URL
     d3.json(tectonics).then(function (plates) {
 
-        // Console log the data retrieved 
+        // Console logged the data retrieved 
         console.log(plates);
         L.geoJSON(plates, {
             color: "orange",
@@ -90,8 +90,8 @@ function createMap(earthquakes) {
         }).addTo(tectonicPlates);
     });
 
-    // Create a baseMaps object.
-    var baseMaps = {
+    // Created a base map object.
+    var base = {
         "OpenStreet": street,
         "Topo": topo,
         "Outdoors": outdoors,
@@ -99,13 +99,13 @@ function createMap(earthquakes) {
         "Watercolor": watercolor
     };
 
-    // Create an overlay object to hold our overlay.
-    var overlayMaps = {
+    // Created an overlay object to hold our overlay.
+    var overlay = {
         "Earthquakes": earthquakes,
         "Tectonic Plates": tectonicPlates
     };
     
-    // Create our map, giving it the satellite map and earthquakes layers to display on load.
+    // Created our map
   var myMap = L.map("map", {
     center: [
       37.09, -95.71
@@ -114,7 +114,7 @@ function createMap(earthquakes) {
     layers: [street, earthquakes, tectonicPlates]
   });
 
-// Add legend
+// Added the legend
 var legend = L.control({position: "bottomright"});
 legend.onAdd = function() {
   var div = L.DomUtil.create("div", "info legend"),
@@ -130,10 +130,10 @@ legend.onAdd = function() {
 };
 legend.addTo(myMap)
 
-  // Create a layer control.
+  // Created a layer control and passed it to the base and overlay maps
   // Pass it our baseMaps and overlayMaps.
   // Add the layer control to the map.
-  L.control.layers(baseMaps, overlayMaps, {
+  L.control.layers(base, overlay, {
     collapsed: false
   }).addTo(myMap);
 };
