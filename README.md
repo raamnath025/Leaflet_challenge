@@ -1,4 +1,4 @@
-# Visualizing Data with Leaflet
+# Leaflet Challenge
 
 ## Deployment Link
 https://raamnath025.github.io/Leaflet_Challenge/
